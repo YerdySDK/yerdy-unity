@@ -1,0 +1,48 @@
+<!-- ACTIVITIES -->
+	<activity android:name="com.prime31.UnityPlayerNativeActivity"
+		android:label="@string/app_name"
+		android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen">
+		<intent-filter>
+			<action android:name="android.intent.action.MAIN" />
+			<category android:name="android.intent.category.LAUNCHER" />
+		</intent-filter>
+	</activity>
+
+<!-- META-DATA -->
+		<meta-data android:name="com.yerdy.services.YerdyUnity" android:value="UnityPlayerActivityProxy"/>
+
+		<service android:name="com.yerdy.services.launch.YRDLaunchService"/>
+		<service android:name="com.yerdy.services.messaging.YRDMessagingService"/>
+		<service android:name="com.yerdy.services.messaging.YRDMessageReportService"/>
+		<service android:name="com.yerdy.services.purchases.YRDReportIAPService"/>
+		<service android:name="com.yerdy.services.purchases.YRDReportVirtualPurchaseService"/>
+		<service android:name="com.yerdy.services.core.YRDCounterService"/>
+		
+        <receiver
+            android:name="com.yerdy.services.push.gcm.GCMBroadcastRecieverEx"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <!-- Must match package on OS level 10-15 -->
+                <category android:name="[YOUR_PACKAGE_NAME]" />
+            </intent-filter>
+        </receiver>
+        <service android:name="com.yerdy.services.push.gcm.GCMIntentService" />
+        <meta-data android:name="Yerdy_GCMSenderId" android:value="gcm:[YOUR_GCM_TOKEN]"/>								   
+		<receiver android:name="com.yerdy.services.push.YRDLocalReceiver"/>
+
+
+<!-- PERMISSIONS -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	
+	<permission android:name="[YOUR_PACKAGE_NAME].permission.C2D_MESSAGE" android:protectionLevel="signature" />
+	<uses-permission android:name="[YOUR_PACKAGE_NAME].permission.C2D_MESSAGE" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+	<uses-permission android:name="android.permission.VIBRATE"/>
+	<uses-permission android:name="com.android.vending.CHECK_LICENSE" />
+
