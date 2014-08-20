@@ -89,28 +89,36 @@ public static class XcodePostProcess
 		
 		private void AddSystemLibs()
 		{
-			List<PlistObject> systemLibs = settings["systemLibraries"].Raw as List<PlistObject>;
-			if (systemLibs != null)
+			if (settings.ContainsKey("systemLibraries")) 
 			{
-				foreach (PlistObject plistItem in systemLibs)
+				List<PlistObject> systemLibs = settings["systemLibraries"].Raw as List<PlistObject>;
+				if (systemLibs != null)
 				{
-					project.AddSystemLibrary(plistItem.String);
+					foreach (PlistObject plistItem in systemLibs)
+					{
+						project.AddSystemLibrary(plistItem.String);
+					}
 				}
 			}
 			
-			
-			List<PlistObject> weakSystemLibs = settings["weakSystemLibraries"].Raw as List<PlistObject>;
-			if (weakSystemLibs != null)
+			if (settings.ContainsKey("weakSystemLibraries"))
 			{
-				foreach (PlistObject plistItem in weakSystemLibs)
+				List<PlistObject> weakSystemLibs = settings["weakSystemLibraries"].Raw as List<PlistObject>;
+				if (weakSystemLibs != null)
 				{
-					project.AddSystemLibrary(plistItem.String, true);
+					foreach (PlistObject plistItem in weakSystemLibs)
+					{
+						project.AddSystemLibrary(plistItem.String, true);
+					}
 				}
 			}
 		}
 		
 		private void AddBuildSettings()
 		{
+			if (!settings.ContainsKey("buildSettings"))
+				return;
+
 			Dictionary<string, PlistObject> buildSettings = settings["buildSettings"] as Dictionary<string, PlistObject>;
 			if (buildSettings == null)
 				return;

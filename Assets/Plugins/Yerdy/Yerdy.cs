@@ -131,7 +131,23 @@ public static class Yerdy
 	{
 		return binding.IsPremiumUser();
 	}
-	
+
+	/// <summary>
+	/// Gets or sets a value indicating whether Yerdy should show another message if the user cancels the previous one
+	/// Defaults to <c>false</c>
+	/// </summary>
+	public static bool ShouldShowAnotherMessageAfterUserCancel
+	{
+		get
+		{
+			return binding.ShouldShowAnotherMessageAfterUserCancel;
+		}
+		set
+		{
+			binding.ShouldShowAnotherMessageAfterUserCancel = true;
+		}
+	}
+
 	/// <summary>
 	/// Checks if a message is available for the given placement
 	/// </summary>
@@ -169,34 +185,6 @@ public static class Yerdy
 	}
 	
 	/// <summary>
-	/// Sets a limit to the number of “failover” messages that can be shown
-	/// 
-	/// If the user clicks “cancel” (or “ok” on a non actionable message), we try and show another message for that placement
-	/// (until we run out of messages). You can set a limit here. (for example, if you wanted to only show 1 message no matter
-	/// what, you can call:
-	/// 
-	/// <code>
-	/// 	Yerdy.SetMaxFailoverCount("myPlacement", 0);
-	/// </code>
-	/// 
-	/// If you would like to apply it to all placements in your app, pass in nil for placement:
-	/// 
-	/// <code>
-	/// 	Yerdy.SetMaxFailoverCount(null, 0);
-	/// </code>
-	/// </summary>
-	/// <param name='placement'>
-	/// The placement this should apply to. To apply it to all placements, pass in <c>null</c>
-	/// </param>
-	/// <param name='count'>
-	/// The maximun number failover messages to show
-	/// </param>
-	public static void SetMaxFailoverCount(string placement, int count)
-	{
-		binding.SetMaxFailoverCount(placement, count);
-	}
-	
-	/// <summary>
 	/// Tracks currency earned by the user.
 	/// </summary>
 	/// <param name='currency'>
@@ -205,9 +193,9 @@ public static class Yerdy
 	/// <param name='amount'>
 	/// The amount of currency earned
 	/// </param>
-	public static void EarnedCurrency(string currency, uint amount)
+	public static void EarnedCurrency(string currency, int amount)
 	{
-		var currencies = new Dictionary<string, uint>()
+		var currencies = new Dictionary<string, int>()
 		{
 			{ currency, amount }
 		};
@@ -220,7 +208,7 @@ public static class Yerdy
 	/// <param name='currencies'>
 	/// A dictionary mapping currency names to amounts
 	/// </param>
-	public static void EarnedCurrency(Dictionary<string, uint> currencies)
+	public static void EarnedCurrency(Dictionary<string, int> currencies)
 	{
 		binding.EarnedCurrencies(currencies);
 	}
@@ -240,9 +228,9 @@ public static class Yerdy
 	/// <param name='onSale'>
 	/// Whether or not the item is on sale.
 	/// </param>
-	public static void PurchasedItem(string item, string currency, uint currencyAmount, bool onSale=false)
+	public static void PurchasedItem(string item, string currency, int currencyAmount, bool onSale=false)
 	{
-		var currencies = new Dictionary<string, uint>()
+		var currencies = new Dictionary<string, int>()
 		{
 			{ currency, currencyAmount }
 		};
@@ -261,7 +249,7 @@ public static class Yerdy
 	/// <param name='onSale'>
 	/// Whether or not the item is on sale.
 	/// </param>
-	public static void PurchasedItem(string item, Dictionary<string, uint> currencies, bool onSale=false)
+	public static void PurchasedItem(string item, Dictionary<string, int> currencies, bool onSale=false)
 	{
 		binding.PurchasedItem(item, currencies, onSale);
 	}
@@ -289,9 +277,9 @@ public static class Yerdy
 	/// <param name='amount'>
 	/// The amount of the currency received from the IAP.
 	/// </param>
-	public static void PurchasedInApp(YerdyPurchase purchase, string currency, uint amount)
+	public static void PurchasedInApp(YerdyPurchase purchase, string currency, int amount)
 	{
-		var currencies = new Dictionary<string, uint>()
+		var currencies = new Dictionary<string, int>()
 		{
 			{ currency, amount },
 		};
@@ -307,7 +295,7 @@ public static class Yerdy
 	/// <param name='currencies'>
 	/// A dictionary mapping currency names to amounts of the currency received from the IAP
 	/// </param>
-	public static void PurchasedInApp(YerdyPurchase purchase, Dictionary<string, uint> currencies)
+	public static void PurchasedInApp(YerdyPurchase purchase, Dictionary<string, int> currencies)
 	{
 		binding.PurchasedInApp(purchase, currencies);
 	}
@@ -318,7 +306,7 @@ public static class Yerdy
 	/// <param name='existingCurrencies'>
 	/// A dictionary mapping currency names to amounts of the user's current currency balance
 	/// </param>
-	public static void SetUserAsPreYerdy(Dictionary<string, uint> existingCurrencies)
+	public static void SetUserAsPreYerdy(Dictionary<string, int> existingCurrencies)
 	{
 		binding.SetUserAsPreYerdy(existingCurrencies);
 	}
@@ -333,9 +321,27 @@ public static class Yerdy
 	{
 		binding.SetShouldTrackPreYerdyUserProgression(shouldTrackPreYerdyUserProgression);
 	}
-	
+
 	/// <summary>
-	/// Logs a player progression event.
+	/// Starts a player progression category with the given milestone.  Any future milestones should be logged
+	/// via LogPlayerProgression
+	/// 
+	/// Milestones are grouped by category. For example, you may have a ‘map’ category and
+	/// your milestones could be ‘unlocked world 1’, ‘unlocked world 2’, ‘unlocked world 3’, etc…
+	/// </summary>
+	/// <param name='category'>
+	/// The category for this progression event
+	/// </param>
+	/// <param name='milestone'>
+	/// The milestone the user reached
+	/// </param>
+	public static void StartPlayerProgression(string category, string milestone)
+	{
+		binding.StartPlayerProgression(category, milestone);
+	}
+
+	/// <summary>
+	/// Logs a player progression milestone for a previously started player progression category (see StartPlayerProgression)
 	/// 
 	/// Milestones are grouped by category. For example, you may have a ‘map’ category and
 	/// your milestones could be ‘unlocked world 1’, ‘unlocked world 2’, ‘unlocked world 3’, etc…

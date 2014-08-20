@@ -360,9 +360,12 @@ namespace XcodePostProcessLib
 		
 		// Use for single value build settings (i.e INFOPLIST_FILE = Info.plist)
 		// Creates entry if it doesn't exist
-		public void SetBuildConfigurationSetting(string key, string value)
+		public void SetBuildConfigurationSetting(string key, string value, string limitedToObjectID = null)
 		{		
-			List<string> configurations = AppBuildConfigurations;
+			List<string> configurations = limitedToObjectID != null ?
+				new List<string>() { limitedToObjectID } :
+				AppBuildConfigurations;
+
 			foreach (string objectId in configurations)
 			{
 				Dictionary<string, PlistObject> buildSettings = projectPlist["objects"][objectId]["buildSettings"];
@@ -441,7 +444,7 @@ namespace XcodePostProcessLib
 				{
 					// if it doesn't exist, create as a single key/value pair.  if we append another item, we'll convert it
 					// to an array later (this mimics Xcode's behaviour)
-					SetBuildConfigurationSetting(key, value);
+					SetBuildConfigurationSetting(key, value, objectId);
 					continue;
 				} 
 				else if ((buildSettings[key].Raw is List<PlistObject>) == false)

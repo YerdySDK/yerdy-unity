@@ -256,26 +256,6 @@
  */
 - (void)dismissMessage;
 
-/** Sets a limit to the number of "failover" messages that can be shown
- 
- If the user clicks "cancel" (or "ok" on a non actionable message), we try and show
- another message for that placement (until we run out of messages).  You can set a
- limit here. (for example, if you wanted to only show 1 message no matter what, you
- can call:
- 
-	[yerdy setMaxFailoverCount:0 forPlacement:@"myPlacement"]
- 
- If you would like to apply it to all placements in your app, pass in nil for placement:
- 
-	[yerdy setMaxFailoverCount:0 forPlacement:nil]
- 
- @param count The maximun number failover messages to show
- @param placement The placement this should apply to.  To apply it to all placements,
-	passing in `nil`
- 
- 
- */
-- (void)setMaxFailoverCount:(NSUInteger)count forPlacement:(NSString *)placement;
 
 /*******************************************************************************
  * @name Currency
@@ -296,17 +276,17 @@
  See [In-Game Currency](#currencies) for more details.
  
  @param currency The name of the currency
- @param amount The amount of currency earned
+ @param amount The amount of currency earned (must be positive!)
  
  @see earnedCurrencies:
  */
-- (void)earnedCurrency:(NSString *)currency amount:(NSUInteger)amount;
+- (void)earnedCurrency:(NSString *)currency amount:(NSInteger)amount;
 
 /** Tracks currency earned by the user.
  
  See [In-Game Currency](#currencies) for more details.
  
- @param currencies A dictionary mapping currency names (`NSString`'s) to amounts (`NSNumber`'s)
+ @param currencies A dictionary mapping currency names (`NSString`'s) to amounts (`NSNumber`'s). All amounts must be positive!
  
  @see earnedCurrency:amount:
  */
@@ -318,19 +298,19 @@
  
  @param item The name of the item
  @param currency The name of the currency used to purchase the item
- @param amount The amount of currency used to purchase the item
+ @param amount The amount of currency used to purchase the item (must be positive!)
  
  @see purchasedItem:withCurrencies:
  @see purchasedItem:withCurrencies:onSale:
  */
-- (void)purchasedItem:(NSString *)item withCurrency:(NSString *)currency amount:(NSUInteger)amount;
+- (void)purchasedItem:(NSString *)item withCurrency:(NSString *)currency amount:(NSInteger)amount;
 
 /** Tracks in-game item purchase
  
  See [In-Game Currency](#currencies) for more details.
  
  @param item The name of the item
- @param currencies A dictionary mapping currency names (`NSString`'s) to amounts (`NSNumber`'s)
+ @param currencies A dictionary mapping currency names (`NSString`'s) to amounts (`NSNumber`'s). All amounts must be positive!
  
  @see purchasedItem:withCurrency:amount:
  @see purchasedItem:withCurrencies:onSale:
@@ -342,7 +322,7 @@
  See [In-Game Currency](#currencies) for more details.
  
  @param item The name of the item
- @param currencies A dictionary mapping currency names (`NSString`'s) to amounts (`NSNumber`'s)
+ @param currencies A dictionary mapping currency names (`NSString`'s) to amounts (`NSNumber`'s). All amounts must be positive!
  @param onSale Whether or not the item is on sale
  
  @see purchasedItem:withCurrency:amount:
@@ -367,25 +347,28 @@
 
 /** Tracks in-app purchases (IAP)
  
+ Use this method to report in app purchases for in-game currency
+ 
  See [In-Game Currency](#currencies) for more details.
  
  @param purchase A YRDPurchase instance describing the purchase
+ @param currency The name of the currency that was purchased
+ @param amount The amount of currency that was purchased (must be positive!)
  
  @see purchasedInApp:
  @see purchasedInApp:currencies:
  @see YRDPurchase
  */
-- (void)purchasedInApp:(YRDPurchase *)purchase currency:(NSString *)currency amount:(NSUInteger)amount;
+- (void)purchasedInApp:(YRDPurchase *)purchase currency:(NSString *)currency amount:(NSInteger)amount;
 
 /** Tracks in-app purchases (IAP)
  
- If the in-app purchase was for in-game currency, use `purchasedInApp:currency:amount:`
- or `purchasedInApp:currencies:` instead.
+ Use this method to report in app purchases for in-game currency(s)
  
  See [In-Game Currency](#currencies) for more details.
  
  @param purchase A YRDPurchase instance describing the purchase
- @param currencies A dictionary mapping currency names (`NSString`'s) to amounts (`NSNumber`'s)
+ @param currencies A dictionary mapping currency names (`NSString`'s) to amounts (`NSNumber`'s).  All amounts must be positive!
  
  @see purchasedInApp:
  @see purchasedInApp:currency:amount:
@@ -425,14 +408,34 @@
  @name Event tracking
  */
 
+/** Starts a player progression category
+ 
+ Milestones are grouped by category.  For example, you may have a 'map' category and your milestones
+ could be 'unlocked world 1', 'unlocked world 2', 'unlocked world 3', etc...
+ 
+ Use this method to log the first milestone in a player progression category, and
+ then `logPlayerProgression:milestone` for any subsequent events
+ 
+ @param category The category for this progression event
+ @param milestone The milestone the user reached
+ 
+ @see logPlayerProgression:milestone:
+ 
+ */
+- (void)startPlayerProgression:(NSString *)category initialMilestone:(NSString *)milestone;
 
 /** Logs a player progression event.
  
  Milestones are grouped by category.  For example, you may have a 'map' category and your milestones
  could be 'unlocked world 1', 'unlocked world 2', 'unlocked world 3', etc...
  
+ You must log the first milestone using `startPlayerProgression:initialMilestone:`, and any
+ subsequent milestones using this method
+ 
  @param category The category for this progression event
  @param milestone The milestone the user reached
+ 
+ @see startPlayerProgression:initialMilestone:
  
  */
 - (void)logPlayerProgression:(NSString *)category milestone:(NSString *)milestone;

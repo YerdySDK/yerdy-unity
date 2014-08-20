@@ -2,7 +2,10 @@
 #import "YerdyCallbacks.h"
 #import "YerdyTransactionObserver.h"
 
-#import "iPhone_View.h"
+// Bad form to declare this here, but Unity keeps moving which header file it
+// is between different Unity versions
+UIWindow*           UnityGetMainWindow();
+
 
 #define EXTERN_C extern "C"
 
@@ -136,10 +139,16 @@ EXTERN_C void _Yerdy_DismissMessage()
 	[YerdyInstance() dismissMessage];
 }
 
-EXTERN_C void _Yerdy_SetMaxFailoverCount(const char *placement, int count)
+EXTERN_C bool _Yerdy_ShouldShowAnotherMessageAfterUserCancel_get()
 {
-	[YerdyInstance() setMaxFailoverCount:MAX(0, count)
-							forPlacement:CStringToNSString(placement)];
+	return yerdyCallbacks.shouldShowAnotherMessageAfterUserCancel;
+}
+
+EXTERN_C void _Yerdy_ShouldShowAnotherMessageAfterUserCancel_set(bool value)
+{
+	if (!yerdyCallbacks)
+		NSLog(@"Please call Yerdy.Init(...) before attemptint to set ShouldShowAnotherMessageAfterUserCancel");
+	yerdyCallbacks.shouldShowAnotherMessageAfterUserCancel = value;
 }
 
 EXTERN_C void _Yerdy_ConfigureCurrencies(const char *currency0, const char *currency1, const char *currency2,
@@ -204,6 +213,11 @@ EXTERN_C void _Yerdy_SetShouldTrackPreYerdyUserProgression(bool shouldTrackPreYe
 	YerdyInstance().shouldTrackPreYerdyUsersProgression = shouldTrackPreYerdyUserProgression;
 }
 
+EXTERN_C void _Yerdy_StartPlayerProgression(const char *category, const char *milestone)
+{
+	[YerdyInstance() startPlayerProgression:CStringToNSString(category)
+						   initialMilestone:CStringToNSString(milestone)];
+}
 
 EXTERN_C void _Yerdy_LogPlayerProgression(const char *category, const char *milestone)
 {

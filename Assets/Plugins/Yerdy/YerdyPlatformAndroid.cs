@@ -62,6 +62,20 @@ public class YerdyPlatformAndroid : IYerdyPlatformBinding
 		}
 		return response;
 	}
+
+	public bool ShouldShowAnotherMessageAfterUserCancel
+	{ 
+		get
+		{
+			using (AndroidJavaObject binding = new AndroidJavaObject("com.yerdy.services.YerdyUnity"))
+				return binding.Call<bool>("getShouldShowAnotherMessageAfterUserCancel");
+		}
+		set
+		{
+			using (AndroidJavaObject binding = new AndroidJavaObject("com.yerdy.services.YerdyUnity"))
+				binding.Call("setShouldShowAnotherMessageAfterUserCancel", value);
+		}
+	}
 	
 	public bool IsMessageAvailable (string placement)
 	{
@@ -88,14 +102,7 @@ public class YerdyPlatformAndroid : IYerdyPlatformBinding
 		}
 	}
 	
-	public void SetMaxFailoverCount (string placement, int count)
-	{
-		using(AndroidJavaObject binding = new AndroidJavaObject("com.yerdy.services.YerdyUnity")) {
-			binding.Call("setMaxFailoverCount", count, placement);
-		}
-	}
-	
-	public void EarnedCurrencies (Dictionary<string, uint> currencies)
+	public void EarnedCurrencies (Dictionary<string, int> currencies)
 	{
 		using(AndroidJavaObject hashMap = new AndroidJavaObject("java.util.HashMap")) {
 			buildHashmap(hashMap, currencies);
@@ -105,7 +112,7 @@ public class YerdyPlatformAndroid : IYerdyPlatformBinding
 		}
 	}
 	
-	public void PurchasedItem (string itemName, Dictionary<string, uint> currencies, bool onSale)
+	public void PurchasedItem (string itemName, Dictionary<string, int> currencies, bool onSale)
 	{
 		using(AndroidJavaObject hashMap = new AndroidJavaObject("java.util.HashMap")) {
 			buildHashmap(hashMap, currencies);
@@ -115,7 +122,7 @@ public class YerdyPlatformAndroid : IYerdyPlatformBinding
 		}
 	}
 	
-	public void PurchasedInApp (YerdyPurchase purchase, Dictionary<string, uint> currencies)
+	public void PurchasedInApp (YerdyPurchase purchase, Dictionary<string, int> currencies)
 	{
 		using(AndroidJavaObject hashMap = new AndroidJavaObject("java.util.HashMap")) {
 			buildHashmap(hashMap, currencies);
@@ -140,7 +147,7 @@ public class YerdyPlatformAndroid : IYerdyPlatformBinding
 		}
 	}
 	
-	public void SetUserAsPreYerdy (Dictionary<string, uint> existingCurrencies)
+	public void SetUserAsPreYerdy (Dictionary<string, int> existingCurrencies)
 	{
 		using(AndroidJavaObject hashMap = new AndroidJavaObject("java.util.HashMap")) {
 			buildHashmap(hashMap, existingCurrencies);
@@ -156,11 +163,18 @@ public class YerdyPlatformAndroid : IYerdyPlatformBinding
 			binding.Call("setShouldTrackPreYerdyUserProgression", shouldTrackPreYerdyUserProgression);
 		}
 	}
+
+	public void StartPlayerProgression (string category, string milestone)
+	{
+		using(AndroidJavaObject binding = new AndroidJavaObject("com.yerdy.services.YerdyUnity")) {
+			binding.Call("startPlayerProgression", category, milestone);
+		}
+	}
 	
 	public void LogPlayerProgression (string category, string milestone)
 	{
 		using(AndroidJavaObject binding = new AndroidJavaObject("com.yerdy.services.YerdyUnity")) {
-			binding.Call("playerProgression", category, milestone);
+			binding.Call("logPlayerProgression", category, milestone);
 		}
 	}
 	
@@ -195,13 +209,13 @@ public class YerdyPlatformAndroid : IYerdyPlatformBinding
 		}
 	}
 
-	private void buildHashmap(AndroidJavaObject hashMap, Dictionary<string, uint> dictionary)
+	private void buildHashmap(AndroidJavaObject hashMap, Dictionary<string, int> dictionary)
 	{
 		IntPtr method_Put = AndroidJNIHelper.GetMethodID(hashMap.GetRawClass(), "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
 		object[] args = new object[2];
 		
 		if(dictionary != null) {
-			foreach(KeyValuePair<string, uint> kvp in dictionary) {
+			foreach(KeyValuePair<string, int> kvp in dictionary) {
 				using(AndroidJavaObject k = new AndroidJavaObject("java.lang.String", kvp.Key)) {
 					using(AndroidJavaObject v = new AndroidJavaObject("java.lang.Integer", (int)kvp.Value)) {
 						args[0] = k;

@@ -36,6 +36,10 @@ static const char *NSStringToCString(NSString *input)
 	UnitySendMessage(GameObjectName, "_DidDismissMessage", NSStringToCString(placement));
 }
 
+- (BOOL)yerdy:(Yerdy *)yerdy shouldShowAnotherMessageAfterUserCancelForPlacement:(NSString *)placement
+{
+	return _shouldShowAnotherMessageAfterUserCancel;
+}
 
 - (void)yerdy:(Yerdy *)yerdy handleInAppPurchase:(YRDInAppPurchase *)purchase
 {

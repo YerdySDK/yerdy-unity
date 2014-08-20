@@ -10,19 +10,20 @@ public interface IYerdyPlatformBinding
 	
 	void SetiOSPushToken(byte[] pushToken);
 	bool IsPremiumUser();
-	
+
+	bool ShouldShowAnotherMessageAfterUserCancel { get; set; }
 	bool IsMessageAvailable(string placement);
 	bool ShowMessage(string placement);
 	void DismissMessage();
-	void SetMaxFailoverCount(string placement, int count);
 
-	void EarnedCurrencies(Dictionary<string, uint> currencies);
-	void PurchasedItem(string itemName, Dictionary<string, uint> currencies, bool onSale);
-	void PurchasedInApp(YerdyPurchase purchase, Dictionary<string, uint> currencies);
+	void EarnedCurrencies(Dictionary<string, int> currencies);
+	void PurchasedItem(string itemName, Dictionary<string, int> currencies, bool onSale);
+	void PurchasedInApp(YerdyPurchase purchase, Dictionary<string, int> currencies);
 	
-	void SetUserAsPreYerdy(Dictionary<string, uint> existingCurrencies);
+	void SetUserAsPreYerdy(Dictionary<string, int> existingCurrencies);
 	void SetShouldTrackPreYerdyUserProgression(bool shouldTrackPreYerdyUserProgression);
-	
+
+	void StartPlayerProgression(string category, string milestone);
 	void LogPlayerProgression(string category, string milestone);
 	void LogScreenVisit(string screenName);
 	void LogEvent(string eventName, Dictionary<string, string> parameters);

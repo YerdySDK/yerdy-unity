@@ -15,13 +15,15 @@ public class YerdyPlatformiOS : IYerdyPlatformBinding
 	[DllImport("__Internal")]
 	private static extern bool _Yerdy_IsPremiumUser();
 	[DllImport("__Internal")]
+	private static extern bool _Yerdy_ShouldShowAnotherMessageAfterUserCancel_get();
+	[DllImport("__Internal")]
+	private static extern void _Yerdy_ShouldShowAnotherMessageAfterUserCancel_set(bool value);
+	[DllImport("__Internal")]
 	private static extern bool _Yerdy_IsMessageAvailable(string placement);
 	[DllImport("__Internal")]
 	private static extern bool _Yerdy_ShowMessage(string placement);
 	[DllImport("__Internal")]
 	private static extern void _Yerdy_DismissMessage();
-	[DllImport("__Internal")]
-	private static extern void _Yerdy_SetMaxFailoverCount(string placement, int count);
 	[DllImport("__Internal")]
 	private static extern void _Yerdy_ConfigureCurrencies(string currency0, string currency1, string currency2, 
 		string currency3, string currency4, string currency5);
@@ -35,6 +37,8 @@ public class YerdyPlatformiOS : IYerdyPlatformBinding
 	private static extern void _Yerdy_SetUserAsPreYerdy(string currencies);
 	[DllImport("__Internal")]
 	private static extern void _Yerdy_SetShouldTrackPreYerdyUserProgression(bool shouldTrackPreYerdyUserProgression);
+	[DllImport("__Internal")]
+	private static extern void _Yerdy_StartPlayerProgression(string category, string milestone);
 	[DllImport("__Internal")]
 	private static extern void _Yerdy_LogPlayerProgression(string category, string milestone);
 	[DllImport("__Internal")]
@@ -128,7 +132,19 @@ public class YerdyPlatformiOS : IYerdyPlatformBinding
 	{
 		return _Yerdy_IsPremiumUser();
 	}
-	
+
+	public bool ShouldShowAnotherMessageAfterUserCancel
+	{
+		get
+		{
+			return _Yerdy_ShouldShowAnotherMessageAfterUserCancel_get();
+		}
+		set
+		{
+			_Yerdy_ShouldShowAnotherMessageAfterUserCancel_set(value);
+		}
+	}
+
 	public bool IsMessageAvailable (string placement)
 	{
 		return _Yerdy_IsMessageAvailable(placement);
@@ -144,24 +160,19 @@ public class YerdyPlatformiOS : IYerdyPlatformBinding
 		_Yerdy_DismissMessage();
 	}
 	
-	public void SetMaxFailoverCount (string placement, int count)
-	{
-		_Yerdy_SetMaxFailoverCount(placement, count);
-	}
-	
-	public void EarnedCurrencies (Dictionary<string, uint> currencies)
+	public void EarnedCurrencies (Dictionary<string, int> currencies)
 	{
 		var currenciesString = currencies != null ? SerializeDictionary(currencies) : null;
 		_Yerdy_EarnedCurrencies(currenciesString);
 	}
 	
-	public void PurchasedItem (string itemName, Dictionary<string, uint> currencies, bool onSale)
+	public void PurchasedItem (string itemName, Dictionary<string, int> currencies, bool onSale)
 	{
 		var currenciesString = currencies != null ? SerializeDictionary(currencies) : null;
 		_Yerdy_PurchasedItem(itemName, currenciesString, onSale);
 	}
 	
-	public void PurchasedInApp (YerdyPurchase purchase, Dictionary<string, uint> currencies)
+	public void PurchasedInApp (YerdyPurchase purchase, Dictionary<string, int> currencies)
 	{
 		var iosPurchase = purchase as YerdyPurchaseiOS;
 		if (iosPurchase == null) {
@@ -173,7 +184,7 @@ public class YerdyPlatformiOS : IYerdyPlatformBinding
 		_Yerdy_PurchasedInApp(iosPurchase.ProductIdentifier, iosPurchase.TransactionIdentifier, currenciesString, iosPurchase.OnSale);
 	}
 	
-	public void SetUserAsPreYerdy (Dictionary<string, uint> existingCurrencies)
+	public void SetUserAsPreYerdy (Dictionary<string, int> existingCurrencies)
 	{
 		var currenciesString = existingCurrencies != null ? SerializeDictionary(existingCurrencies) : null;
 		_Yerdy_SetUserAsPreYerdy(currenciesString);
@@ -183,7 +194,12 @@ public class YerdyPlatformiOS : IYerdyPlatformBinding
 	{
 		_Yerdy_SetShouldTrackPreYerdyUserProgression(shouldTrackPreYerdyUserProgression);
 	}
-	
+
+	public void StartPlayerProgression (string category, string milestone)
+	{
+		_Yerdy_StartPlayerProgression(category, milestone);
+	}
+
 	public void LogPlayerProgression (string category, string milestone)
 	{
 		_Yerdy_LogPlayerProgression(category, milestone);
