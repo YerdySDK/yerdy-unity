@@ -42,7 +42,11 @@ public class YerdyPlatformiOS : IYerdyPlatformBinding
 	[DllImport("__Internal")]
 	private static extern void _Yerdy_LogPlayerProgression(string category, string milestone);
 	[DllImport("__Internal")]
-	private static extern void _Yerdy_LogScreenVisit(string screenVisit);
+	private static extern void _Yerdy_LogFeatureUse(string feature);
+	[DllImport("__Internal")]
+	private static extern void _Yerdy_SetFeatureUseLevels(int usesForNovice, int usesForAmateur, int usesForMaster);
+	[DllImport("__Internal")]
+	private static extern void _Yerdy_SetFeatureUseLevelsForFeature(string feature, int usesForNovice, int usesForAmateur, int usesForMaster);
 	[DllImport("__Internal")]
 	private static extern void _Yerdy_LogEvent(string eventName, string parameters);
 	[DllImport("__Internal")]
@@ -205,9 +209,19 @@ public class YerdyPlatformiOS : IYerdyPlatformBinding
 		_Yerdy_LogPlayerProgression(category, milestone);
 	}
 	
-	public void LogScreenVisit (string screenName)
+	public void LogFeatureUse (string feature)
 	{
-		_Yerdy_LogScreenVisit(screenName);
+		_Yerdy_LogFeatureUse(feature);
+	}
+	
+	public void SetFeatureUseLevels(int usesForNovice, int usesForAmateur, int usesForMaster)
+	{
+		_Yerdy_SetFeatureUseLevels(usesForNovice, usesForAmateur, usesForMaster);
+	}
+
+	public void SetFeatureUseLevels(string feature, int usesForNovice, int usesForAmateur, int usesForMaster)
+	{
+		_Yerdy_SetFeatureUseLevelsForFeature(feature, usesForNovice, usesForAmateur, usesForMaster);
 	}
 	
 	public void LogEvent (string eventName, Dictionary<string, string> parameters)

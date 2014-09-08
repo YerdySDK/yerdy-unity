@@ -225,9 +225,20 @@ EXTERN_C void _Yerdy_LogPlayerProgression(const char *category, const char *mile
 								milestone:CStringToNSString(milestone)];
 }
 
-EXTERN_C void _Yerdy_LogScreenVisit(const char *screenVisit)
+EXTERN_C void _Yerdy_LogFeatureUse(const char *feature)
 {
-	[YerdyInstance() logScreenVisit:CStringToNSString(screenVisit)];
+	[YerdyInstance() logFeatureUse:CStringToNSString(feature)];
+}
+
+EXTERN_C void _Yerdy_SetFeatureUseLevels(int usesForNovice, int usesForAmateur, int usesForMaster)
+{
+	[YerdyInstance() setFeatureUsesForNovice:usesForNovice amateur:usesForAmateur master:usesForMaster];
+}
+
+EXTERN_C void _Yerdy_SetFeatureUseLevelsForFeature(const char *feature, int usesForNovice, int usesForAmateur, int usesForMaster)
+{
+	[YerdyInstance() setFeatureUsesForNovice:usesForNovice amateur:usesForAmateur
+									  master:usesForMaster forFeature:CStringToNSString(feature)];
 }
 
 EXTERN_C void _Yerdy_LogEvent(const char *eventName, const char *parameters)

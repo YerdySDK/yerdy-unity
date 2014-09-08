@@ -358,16 +358,46 @@ public static class Yerdy
 	}
 	
 	/// <summary>
-	/// Tracks a screen visit
+	/// Logs the user's use of a feature in your game
+	/// 
+	/// You can use this to track which features your users actually use, allowing you to make
+	/// decisions regarding which features to improve or bring more attention to in your game
 	/// </summary>
-	/// <param name='screenName'>
-	/// The name of the screen (for example: “settings”, “store”, etc…)
+	/// <param name='feature'>
+	/// The name of the feature
 	/// </param>
-	public static void LogScreenVisit(string screenName)
+	public static void LogFeatureUse(string feature)
 	{
-		binding.LogScreenVisit(screenName);
+		binding.LogFeatureUse(feature);
+	}
+
+	/// <summary>
+	/// Sets the default number of feature uses required for a user to reach the novice, amateur and master levels
+	/// 
+	/// Note:  Setting these is optional, if not set, Yerdy uses it's own defaults
+	/// </summary>
+	/// <param name="usesForNovice">Uses require to reach novice.</param>
+	/// <param name="usesForAmateur">Uses require to reach amateur.</param>
+	/// <param name="usesForMaster">Uses require to reach master.</param>
+	public static void SetFeatureUseLevels(int usesForNovice, int usesForAmateur, int usesForMaster)
+	{
+		binding.SetFeatureUseLevels(usesForNovice, usesForAmateur, usesForMaster);
 	}
 	
+	/// <summary>
+	/// Sets the number of feature uses required for a user to reach the novice, amateur and master levels for a specific feature
+	/// 
+	/// Note:  Setting these is optional, if not set, Yerdy uses it's own defaults
+	/// </summary>
+	/// <param name="feature">The feature</param>
+	/// <param name="usesForNovice">Uses require to reach novice.</param>
+	/// <param name="usesForAmateur">Uses require to reach amateur.</param>
+	/// <param name="usesForMaster">Uses require to reach master.</param>
+	public static void SetFeatureUseLevels(string feature, int usesForNovice, int usesForAmateur, int usesForMaster)
+	{
+		binding.SetFeatureUseLevels(feature, usesForNovice, usesForAmateur, usesForMaster);
+	}
+
 	/// <summary>
 	/// Tracks a user-defined event
 	/// </summary>

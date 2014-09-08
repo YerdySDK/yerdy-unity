@@ -81,7 +81,7 @@ public class YerdyPlatformAndroid : IYerdyPlatformBinding
 	{
 		bool response = false;
 		using(AndroidJavaObject binding = new AndroidJavaObject("com.yerdy.services.YerdyUnity")) {
-			response = binding.Call<bool>("isMessageAvailiable", placement);
+			response = binding.Call<bool>("isMessageAvailable", placement);
 		}
 		return response;
 	}
@@ -178,13 +178,25 @@ public class YerdyPlatformAndroid : IYerdyPlatformBinding
 		}
 	}
 	
-	public void LogScreenVisit (string screenName)
+	public void LogFeatureUse (string feature)
 	{
 		using(AndroidJavaObject binding = new AndroidJavaObject("com.yerdy.services.YerdyUnity")) {
-			binding.Call("logScreenVisit", screenName);
+			binding.Call("logFeatureUse", feature);
 		}
 	}
+
+	public void SetFeatureUseLevels(int usesForNovice, int usesForAmateur, int usesForMaster)
+	{
+		using (AndroidJavaObject binding = new AndroidJavaObject("com.yerdy.services.YerdyUnity"))
+			binding.Call("setFeatureUseLevels", usesForNovice, usesForAmateur, usesForMaster);
+	}
 	
+	public void SetFeatureUseLevels(string feature, int usesForNovice, int usesForAmateur, int usesForMaster)
+	{
+		using (AndroidJavaObject binding = new AndroidJavaObject("com.yerdy.services.YerdyUnity"))
+			binding.Call("setFeatureUseLevels", feature, usesForNovice, usesForAmateur, usesForMaster);
+	}
+
 	public void LogEvent (string eventName, Dictionary<string, string> parameters)
 	{
 		using(AndroidJavaObject hashMap = new AndroidJavaObject("java.util.HashMap")) {

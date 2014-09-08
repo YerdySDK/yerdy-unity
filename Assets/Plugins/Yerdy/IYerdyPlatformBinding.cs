@@ -25,7 +25,11 @@ public interface IYerdyPlatformBinding
 
 	void StartPlayerProgression(string category, string milestone);
 	void LogPlayerProgression(string category, string milestone);
-	void LogScreenVisit(string screenName);
+
+	void LogFeatureUse(string feature);
+	void SetFeatureUseLevels(int usesForNovice, int usesForAmateur, int usesForMaster);
+	void SetFeatureUseLevels(string feature, int usesForNovice, int usesForAmateur, int usesForMaster);
+
 	void LogEvent(string eventName, Dictionary<string, string> parameters);
 
 	void LogAdRequest(string adNetworkname);
